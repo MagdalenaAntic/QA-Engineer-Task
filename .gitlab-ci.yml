@@ -1,0 +1,19 @@
+stages:
+  - test
+
+test:
+  image: mcr.microsoft.com/playwright:v1.45.1-jammy
+  stage: test
+  script:
+    - npm ci
+    - npx playwright install --with-deps
+    - xvfb-run npx playwright test
+    - echo "https://gitlab.com/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/-/jobs/$CI_JOB_ID/artifacts" 
+  allow_failure: true
+  when: manual
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+      - playwright-report 
+    expire_in: 2 day
